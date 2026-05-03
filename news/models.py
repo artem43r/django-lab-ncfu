@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Category(models.Model):
@@ -25,9 +26,10 @@ class News(models.Model):
     is_published=models.BooleanField(default=True, verbose_name='Опубликовано')
     category=models.ForeignKey(Category, on_delete=models.PROTECT, null=True, verbose_name='Категория')
     email = models.EmailField(verbose_name='Email')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def get_absolute_url(self):
-        return reverse('view_news', kwargs={'news_id': self.pk})
+        return reverse('view_news', kwargs={'pk': self.pk})
 
     
     def my_func(self):
