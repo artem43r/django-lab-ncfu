@@ -3,18 +3,26 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from .models import News, Category
-from .forms import NewsForm
+from .forms import NewsForm, ContactForm
 from .utils import MetaTagsMixin, MyMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from .forms import NewsForm, ContactForm, UserPasswordResetForm
 
-def test(request):
-    objects = ['john1', 'paul2', 'george3', 'ringo4', 'john5', 'paul6', 'george7']
-    paginator = Paginator(objects, 2)
-    page_num = request.GET.get('page', 1)
-    page_objects = paginator.get_page(page_num)
-    return render(request, 'news/test.html', {'page_obj': page_objects})
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
 
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = ContactForm()
+
+    return render(request,
+                  'news/contact.html',
+                  {'form': form})
+    
+    
 class HomeNews(MetaTagsMixin, MyMixin, ListView):
     model = News
     template_name = 'news/home_news_list.html'
